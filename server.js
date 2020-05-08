@@ -1,38 +1,30 @@
-const express = require('express');
-const app = express();
-// const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const port = process.env.PORT || 8081;
+var express = require('express'),
+  app = express(),
+  port = 8082; //process.env.PORT || 3000,
+  mongoose = require('mongoose'),
+  Admin = require('./api/models/adminModel'), //created model loading here
+  bodyParser = require('body-parser');
+  
+// mongoose instance connection url connection
+// mongoose.Promise = global.Promise;
+mongoose
+    .connect('mongodb+srv://Sarah:41860000@cluster0-qwxt7.mongodb.net/test?retryWrites=true&w=majority',
+            { useNewUrlParser: true, useUnifiedTopology: true })
+            .then((result)=>{
+                console.log('database connected');
+                app.listen(3000);
+            })
+            .catch(err=>{console.log(err)})
 
-app.use (express.json());
-app.use (express.urlencoded({extended:false}));
-// app.use (authRoutes);
-// app.use (category);
-
-app.use ((req,res)=> {
-     res.send("<h2>This is my App</h2>");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(function(req, res) {
+  res.status(404).send({url: req.originalUrl + ' not found'})
 });
 
-// const http = require('http');
-// const hostname = '127.0.0.1';
-// const port = 8081;
-// const server = http.createServer(function(req, res) {
-//   res.statusCode = 200;
-//   res.setHeader('Content-Type', 'text/plain');
-//   res.end('Hello World\n I Love Myself');
-// });
-mongoose.connect(`mongodb+srv://Sarah:${process.env.DATABASEURL}@cluster0-qwxt7.mongodb.net/test?retryWrites=true&w=majority}`, 
-{
-        useNewUrlParser: true,
-        useUnifiedTopology: true, 
-    })
-    .then(result => {
-        console.log("Successfully connect to MongoDB.");
-        app.listen(8081);
-        initial();
-})
-    .catch(err => console.error("Connection error", err));
+var routes = require('./api/routes/adminRoute'); //importing route
+routes(app); //register the route
 
-// server.listen(port, hostname, function() {
-//   console.log('Server running at http://'+ hostname + ':' + port + '/');
-// });
+app.listen(port);
+
+console.log('TutoringApp API server started on: ' + port);
