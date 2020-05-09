@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const subjectSchema = mongoose.Schema({
-  subject: {
+  subject_name: {
     type: String,
     required: [true, 'Please enter subject name'],
   },

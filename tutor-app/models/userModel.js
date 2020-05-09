@@ -2,7 +2,7 @@
 // const jwt = require('jsonwebtoken');
 // const Schema = mongoose.Schema;
 
-// const adminSchema = new Schema({
+// const userSchema = new Schema({
 //     first_name: {
 //     type: String,
 //   },
@@ -18,7 +18,7 @@
 //   },
 //   role: {
 //     type: String,
-//     default: 'admin',
+//     default: 'user',
 //   },
 //   password: {
 //     type: String,
@@ -35,17 +35,17 @@
 // //     return token;
 // // };
 
-// // module.exports = mongoose.model('Users', adminSchema);
+// // module.exports = mongoose.model('Users', userSchema);
 
-// const Admin = mongoose.model('Admins', AdminSchema);
-// module.exports = Admin;
+// const user = mongoose.model('users', userSchema);
+// module.exports = user;
 
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
-var AdminSchema = new Schema({
+var UserSchema = new Schema({
     first_name: {
     type: String,
     required: 'Kindly enter the name of the task'
@@ -64,7 +64,7 @@ var AdminSchema = new Schema({
 //   },
   role: {
     type: String,
-    default: 'admin',
+    default: 'user',
   },
   password: {
     type: String,
@@ -75,13 +75,6 @@ var AdminSchema = new Schema({
     type: Date,
     default: Date.now
 },
-// status: {
-//   type: [{
-//     type: String,
-//     enum: ['pending', 'ongoing', 'completed']
-//   }],
-//   default: ['pending']
-// }
 });
 
-module.exports = mongoose.model('Admin', AdminSchema);
+module.exports = mongoose.model('user', UserSchema);

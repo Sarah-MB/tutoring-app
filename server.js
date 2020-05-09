@@ -2,7 +2,7 @@ var express = require('express'),
   app = express(),
   port = 8082; //process.env.PORT || 3000,
   mongoose = require('mongoose'),
-  Admin = require('./api/models/adminModel'), //created model loading here
+  user = require('./tutor-app/models/userModel'), //created model loading here
   bodyParser = require('body-parser');
   
 // mongoose instance connection url connection
@@ -22,8 +22,11 @@ app.use(function(req, res) {
   res.status(404).send({url: req.originalUrl + ' not found'})
 });
 
-var routes = require('./api/routes/adminRoute'); //importing route
-routes(app); //register the route
+var routes = require('./tutor-app/routes/userRoute'); //importing route
+var routes = require('./tutor-app/routes/lessonRoute');
+var routes = require('./tutor-app/routes/subjectRoute');
+var routes = require('./tutor-app/routes/categoryRoute');
+//route(app); //register the route
 
 app.listen(port);
 
