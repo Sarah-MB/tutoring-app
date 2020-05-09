@@ -28,6 +28,10 @@ exports.logIn = (req, res, next) => {
     );
     res.status(200).json({
     _id: user._id,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    email: user.email,
+    role: user.role,
     status: 'success',
         token,
         data: {
@@ -39,53 +43,84 @@ exports.logIn = (req, res, next) => {
     .catch(err => console.log(err));
     }
 
-exports.signUp = (req, res, next) => {
+// exports.signUp = (req, res, next) => {
 
-    const email = req.body.email;
+//     const email = req.body.email;
     
-    const password = req.body.password;
+//     const password = req.body.password;
     
-    if (!email || !password) {
+//     if (!email || !password) {
     
-    res.status(400).json({
-    status: false,
-    message: "All fields are required"
+//     res.status(400).json({
+//     status: false,
+//     message: "All fields are required"
     
+//     });
+    
+//     return;
+//     }
+    
+//     User.findOne({ email: req.body.email})
+//     .then(user => {
+//     if (user) {
+//     return res.status(423)
+//     .json({ status: false, message: "This email already exists" });
+    
+//     }
+    
+//     });
+    
+//     bcrypt
+//     .hash(password, 8)
+//     .then(password => {
+//     let user = new User({
+//     email,
+//     password
+//     });
+//     return user.save();
+//     })
+//     .then(() => res.status(200).json({
+//     status: true,
+//     message: "User registered successfully"
+//     }))
+    
+//     .catch(err => console.log(err));
+//     res.json({message: "Welcome to my platform",
+//            email: email,
+//         });
+    
+//     };
+exports.signUp = async (req, res, next) => {
+    try{
+        const userExists = await User.findOne({email: req.body.email});
+        if (userExists){
+            return res.status(403).json({
+                status: 'fail',
+                error: 'Email already exists'
+            })
+        }
+        console.log(process.env);
+    const user = await User.create({
+        first_name: req.body.firstName,
+        last_name: req.body.lastName,
+        email: req.body.email,
+        role: req.body.role,
+        password: req.body.password,
+        // confirmPassword: req.body.confirmPassword
     });
-    
-    return;
-    }
-    
-    User.findOne({ email: req.body.email})
-    .then(user => {
-    if (user) {
-    return res.status(423)
-    .json({ status: false, message: "This email already exists" });
-    
-    }
-    
+    const token = signToken(user._id, user.role)
+    res.status(201).json({
+        status: 'success',
+        token,
+        data: {
+            user
+        }
     });
-    
-    bcrypt
-    .hash(password, 8)
-    .then(password => {
-    let user = new User({
-    email,
-    password
-    });
-    return user.save();
-    })
-    .then(() => res.status(200).json({
-    status: true,
-    message: "User registered successfully"
-    }))
-    
-    .catch(err => console.log(err));
-    res.json({message: "Welcome to my platform",
-           email: email,
-        });
-    
-    };
+} catch(err){
+    console.error(err);
+};
+
+}
 
 exports.logout = (req, res) =>{
         res.clearCookie('jwt');
