@@ -47,10 +47,8 @@ exports.signUp = (req, res, next) => {
     
     if (!email || !password) {
     
-    res.status(400).send({
-    
+    res.status(400).json({
     status: false,
-    
     message: "All fields are required"
     
     });
@@ -69,21 +67,17 @@ exports.signUp = (req, res, next) => {
     });
     
     bcrypt
-    .hash(password, 12)
+    .hash(password, 8)
     .then(password => {
     let user = new User({
     email,
     password
-    
     });
     return user.save();
-    
     })
-    
-    .then(() => res.status(200).send({
+    .then(() => res.status(200).json({
     status: true,
     message: "User registered successfully"
-    
     }))
     
     .catch(err => console.log(err));
