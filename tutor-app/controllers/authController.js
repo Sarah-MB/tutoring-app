@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken'); 
 const User = require('./../models/userModel');
 
-exports.logIn = (req, res, next) => {
+exports.login = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     // res.json({ status:true, data: email })
@@ -90,7 +90,7 @@ exports.logIn = (req, res, next) => {
 //         });
     
 //     };
-exports.signUp = async (req, res, next) => {
+exports.signup = async (req, res, next) => {
     try{
         const userExists = await User.findOne({email: req.body.email});
         if (userExists){
@@ -106,7 +106,6 @@ exports.signUp = async (req, res, next) => {
         email: req.body.email,
         role: req.body.role,
         password: req.body.password,
-        // confirmPassword: req.body.confirmPassword
     });
     const token = signToken(user._id, user.role)
     res.status(201).json({

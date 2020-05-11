@@ -12,22 +12,23 @@ mongoose
             { useNewUrlParser: true, useUnifiedTopology: true })
             .then((result)=>{
                 console.log('database connected');
-                app.listen(3000);
+                // app.listen(8082);
             })
             .catch(err=>{console.log(err)})
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(function(req, res) {
-  res.status(404).send({url: req.originalUrl + ' not found'})
-});
+app.use(express.urlencoded({ extended: true }));
+// app.use(function(req, res) {
+//   res.status(404).send({url: req.originalUrl + ' not found'})
+// });
 
 var routes = require('./tutor-app/routes/userRoute'); //importing route
 var routes = require('./tutor-app/routes/lessonRoute');
 var routes = require('./tutor-app/routes/subjectRoute');
 var routes = require('./tutor-app/routes/categoryRoute');
 //route(app); //register the route
-
+// app.use('/', routes)
 app.listen(port);
 
 console.log('TutoringApp API server started on: ' + port);
