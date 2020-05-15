@@ -8,11 +8,10 @@ module.exports = function(app) {
 
 //admin create lesson for student with tutor
 app.route('/admin/lesson') 
-   .post(lessonController.adminCreateLesson);
+   .post(lessonController.admin_create_lesson);
 //student book/create lesson with tutor
 app.route('/student/lesson') 
-    .post(authController.restrictTo("student"), 
-         lessonController.studentBookLesson);
+    .post(lessonController.studentBookLesson);
 //List of all booked lessons for student
 app.route('/student/lessons')
     .get(lessonController.student_lessons);

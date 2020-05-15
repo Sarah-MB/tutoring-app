@@ -15,11 +15,11 @@ module.exports = function(app) {
 app.route('/category')
    .post( categoryController.create_category);
 //get all categories
-app.route('/category') 
+app.route('/categories') 
    .get(categoryController.category_list);
 //update a category
 app.route('/category/:category_id') 
-       .put(categoryController.updateCategory);
+       .put(categoryController.update_category);
 //delete  category
 app.route('/category/:category_id')
        .delete(categoryController.delete_category);

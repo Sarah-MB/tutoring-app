@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken'); 
+const bcrypt = require ('bcryptjs')
 const User = require('./../models/userModel');
 
 exports.login = (req, res, next) => {
@@ -8,12 +9,16 @@ exports.login = (req, res, next) => {
     // res.json({ status:true, data: email })
     User.findOne({ email })
     .then(user => {
+        console.log(user.password)
     if (!user) {
     return res
     .status(404)
     .json("User not found, please provide valid credentials");
     }
-    bcrypt.compare(password, user.password).then(valid => {
+    console.log(user.password);
+    
+    bcrypt.compare(password, user.password)
+    .then(valid => {
     if (!valid) {
     return res
     .status(403)
@@ -23,20 +28,21 @@ exports.login = (req, res, next) => {
     }
     const token = jwt.sign(
     { email: user.email, _id: user._id },
-    "somesecretkey",
-    { expiresIn: "1hr" }
+    "STARTDOTNG",
+    { expiresIn: "1d" }
     );
+    User.findByIdAndUpdate(user._id, {accessToken: token })
     res.status(200).json({
-    _id: user._id,
+    status: "Login successful",
+    data: {
+        _id: user._id,
     first_name: user.first_name,
     last_name: user.last_name,
     email: user.email,
     role: user.role,
     status: 'success',
         token,
-        data: {
-            user
-        }
+    }
     });
     });
     })
@@ -99,15 +105,19 @@ exports.signup = async (req, res, next) => {
                 error: 'Email already exists'
             })
         }
-        console.log(process.env);
+      const password = await bcrypt.hash(req.body.password, 12)
+
+        // console.log(process.env);
     const user = await User.create({
-        first_name: req.body.firstName,
-        last_name: req.body.lastName,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
         email: req.body.email,
         role: req.body.role,
-        password: req.body.password,
+        password: password,
     });
-    const token = signToken(user._id, user.role)
+    const token = await jwt.sign({ userId: user._id }, "STARTDOTNG",{ expiresIn: '2d'});
+    user.accessToken = token;
+    user.save();
     res.status(201).json({
         status: 'success',
         token,

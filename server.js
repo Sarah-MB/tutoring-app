@@ -1,6 +1,6 @@
 var express = require('express'),
   app = express(),
-  port = 8082; //process.env.PORT || 3000,
+  port = process.env.PORT || 3000,
   mongoose = require('mongoose'),
   user = require('./tutor-app/models/userModel'), //created model loading here
   bodyParser = require('body-parser');
@@ -24,11 +24,15 @@ app.use(express.urlencoded({ extended: true }));
 // });
 
 var routes = require('./tutor-app/routes/userRoute'); //importing route
-var routes = require('./tutor-app/routes/lessonRoute');
-var routes = require('./tutor-app/routes/subjectRoute');
-var routes = require('./tutor-app/routes/categoryRoute');
-//route(app); //register the route
+// var lesson = require('./tutor-app/routes/lessonRoute');
+var subject = require('./tutor-app/routes/subjectRoute');
+var category = require('./tutor-app/routes/categoryRoute');
+routes(app); //register the route
+// lesson(app);
+subject(app);
+category(app);
 // app.use('/', routes)
 app.listen(port);
 
 console.log('TutoringApp API server started on: ' + port);
+  

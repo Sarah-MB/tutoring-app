@@ -23,10 +23,10 @@ app.route('/login')
     .delete(tutorApp.delete_user);
 
 // gets list of all tutors
-app.route('/tutors')
-   .get(userController.tutor_list);
-// gets list of all students
-app.route('/students') 
-   .get(userController.student_list);
+// app.route('/tutors')
+//    .get(userController.tutor_list);
+// // gets list of all students
+// app.route('/students') 
+//    .get(userController.student_list);
   };
 
