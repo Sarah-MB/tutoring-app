@@ -6,25 +6,24 @@ const subjectSchema = mongoose.Schema({
     required: [true, 'Please enter subject name'],
   },
   category: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Category',
+    type: String
   },
 
   tutors: [
     {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Tutor',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     },
   ],
 });
 
-subjectSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'tutors',
-    select: ' -subjects -__v -role',
-  });
-  next();
-});
+// subjectSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'tutors',
+//     select: ' -subjects -__v -role',
+//   });
+//   next();
+// });
 
 const Subject = mongoose.model('Subject', subjectSchema);
 

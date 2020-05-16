@@ -1,7 +1,12 @@
-var express = require('express'),
+const express = require('express'),
   app = express(),
   port = process.env.PORT || 3000,
   mongoose = require('mongoose'),
+//  genRoutes = require('./routes/genRoute');
+const tutorRoutes = require('./routes/tutorRoute');
+const studentRoutes = require('./routes/studentRoute');
+const userRoutes = require('./routes/userRoute');
+const authRoutes = require('./routes/auth');
   user = require('./tutor-app/models/userModel'), //created model loading here
   bodyParser = require('body-parser');
   
@@ -23,14 +28,20 @@ app.use(express.urlencoded({ extended: true }));
 //   res.status(404).send({url: req.originalUrl + ' not found'})
 // });
 
-var routes = require('./tutor-app/routes/userRoute'); //importing route
+// app.use(genRoutes);
+app.use(userRoutes);
+app.use(tutorRoutes);
+// app.use(studentRoutes);
+app.use(authRoutes);
+
+// var routes = require('./tutor-app/routes/userRoute'); //importing route
 // var lesson = require('./tutor-app/routes/lessonRoute');
-var subject = require('./tutor-app/routes/subjectRoute');
-var category = require('./tutor-app/routes/categoryRoute');
-routes(app); //register the route
+// var subject = require('./tutor-app/routes/subjectRoute');
+// var category = require('./tutor-app/routes/categoryRoute');
+// routes(app); //register the route
 // lesson(app);
-subject(app);
-category(app);
+// subject(app);
+// category(app);
 // app.use('/', routes)
 app.listen(port);
 
