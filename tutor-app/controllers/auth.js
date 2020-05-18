@@ -5,9 +5,9 @@ const dotenv = require('dotenv').config();
 const secret_key = process.env.JWT_SECRET;
 
 exports.signUp = (req, res, next) =>{
-  const { firstname, lastname, email, password, role } = req.body
+  const { first_name, last_name, email, password, role } = req.body
 
-  if(!firstname || !lastname || !email || !password){
+  if(!first_name || !last_name || !email || !password){
     res.status(400)
     res.send({ status: false, message: "All fields are required"})
     return;
@@ -27,13 +27,13 @@ exports.signUp = (req, res, next) =>{
   .hash(password, 12)
   .then(password => {
     let user = new User({
-      firstname,
-      lastname,
+      first_name,
+      last_name,
       email,
       password,
       role: role || 'student',
     });
-    const accessToken = jwt.sign({userId: user._id }, secret_key, { expiresIn: '7d' });
+    const accessToken = jwt.sign({userId: user._id }, 'secret_key', { expiresIn: '7d' });
     user.accessToken = accessToken;
      user.save();
      return user;
@@ -45,36 +45,30 @@ exports.signUp = (req, res, next) =>{
 }
 
 
-exports.logIn = (req, res, next) =>{
-  const { email, password } = req.body;
-  User.findOne({ email })
-  .then(user =>{
-    if(!user){
-      return res
-      .status(404)
-      .send({ status: false,message: "Email address not found, please cross check your login info! "})
-    }
-    bcrypt.compare(password, user.password)
-    .then(valid =>{
-      if(!valid){
-        return res
-        .status(404)
-        .send({ status: false, message: "Password incorrect, please try again "})
-      }
-      const accessToken = jwt.sign(
-        {email: user.email, _id: user._id }, secret_key, { expiresIn: "1hr" }
-      );
-      User.findByIdAndUpdate(user._id, {accessToken: accessToken})
-      res.status(200).send({
-        status: true,
-        message: "Login successful",
-        _id: user._id,
-        accessToken
-      })
-      console.log(user.accessToken)
-    })
-  })
-  .catch(err => console.log )
+exports.login =(req, res, next)=>{
+  const email = req.body.email;
+  const password = req.body.password;
+  
+  User.findOne({email})
+      .then(user=>{
+          if(!user){return res
+              .status(404)
+              .send("User not found, please provide valid credentials");}
+              
+              bcrypt.compare(password, user.password)
+                  .then(valid=>{
+                      if(!valid){
+                          return res.status(403)
+                              .send("Incorrect username or password, please review details and try again");
+                      }
+                      const token = jwt.sign({email: user.email, _id: user._id},
+                                   "somesecretkey",
+                                  {expiresIn: "1h"});
+                      res.status(200)
+                          .send({_id: user._id, email: user.email, token: token});
+                  });
+      }).catch(err => console.log(err));
+      
 }
 
 

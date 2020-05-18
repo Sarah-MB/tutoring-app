@@ -1,15 +1,31 @@
 const express = require('express'),
   app = express(),
   port = process.env.PORT || 3000,
-  mongoose = require('mongoose'),
+  mongoose = require('mongoose');
 //  genRoutes = require('./routes/genRoute');
-const tutorRoutes = require('./routes/tutorRoute');
-const studentRoutes = require('./routes/studentRoute');
-const userRoutes = require('./routes/userRoute');
-const authRoutes = require('./routes/auth');
+// const tutorRoutes = require('./routes/tutorRoute');
+// const studentRoutes = require('./routes/studentRoute');
+// const userRoutes = require('./tutor-app/routes/userRoute');
+const authRoutes = require('./tutor-app/routes/auth'),
   user = require('./tutor-app/models/userModel'), //created model loading here
   bodyParser = require('body-parser');
   
+
+
+// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+// app.use(function(req, res) {
+//   res.status(404).send({url: req.originalUrl + ' not found'})
+// });
+
+// app.use(genRoutes);
+// app.use(userRoutes);
+// app.use(tutorRoutes);
+// app.use(studentRoutes);
+app.use(authRoutes);
+
+
 // mongoose instance connection url connection
 // mongoose.Promise = global.Promise;
 mongoose
@@ -20,20 +36,6 @@ mongoose
                 // app.listen(8082);
             })
             .catch(err=>{console.log(err)})
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
-// app.use(function(req, res) {
-//   res.status(404).send({url: req.originalUrl + ' not found'})
-// });
-
-// app.use(genRoutes);
-app.use(userRoutes);
-app.use(tutorRoutes);
-// app.use(studentRoutes);
-app.use(authRoutes);
-
 // var routes = require('./tutor-app/routes/userRoute'); //importing route
 // var lesson = require('./tutor-app/routes/lessonRoute');
 // var subject = require('./tutor-app/routes/subjectRoute');
